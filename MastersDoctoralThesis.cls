@@ -377,12 +377,11 @@ KOMA-script documentation for details.}]{fancyhdr}
             {\large by} \\[0.4cm]
             {\Large \authorname} \\[0.2cm]
             \HRule \\[0.6cm] % Horizontal line
-		\end{center} \vspace{0.8cm}
+		\end{center} \vspace{0.2cm}
 		
 	    {
-	        {\flushleft \huge \textbf{Abstract} 
-	        \vspace{0.4cm}} \\ 
-	        \small\def\baselinestretch{1}\@normalsize
+	        {\flushleft \huge \textbf{Abstract} } \\ 
+	        \par\small\def\baselinestretch{1}\@normalsize
 	    }
 	}
 	{
