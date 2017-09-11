@@ -1,0 +1,46 @@
+\chapter{Introduction} % Main chapter title
+\label{Introduction} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+Cryptography has been rooted in some of history's most important conflicts. 
+During World War 1, in January of 1917, British cryptanalysts deciphered a German
+telegram from the German Foreign Minister \textit{Arthur Zimmermann} to the German Minister
+of Mexico \textit{Heinrich von Eckardt}. The message was a proposition to Mexico, offering
+United States territory in return for joining the Central Powers.\footnote{The Central Powers 
+were comprised of Germany, Austria-Hungary, the Ottoman Empire and Bulguria; also known as
+the \textit{Quadruple Alliance} \cite{wiki:central_powers}.} On February 24th 1917, the British
+presented the telegram to President \textit{Woodrow Wilson} of the United States of America. 
+Shortly after, on April 6th, 1917, the United States of America officially declared war
+on the Central Powers \cite{the_zimmermann_telegram}. The impact that cryptanalysis had on
+the war was tremendous forever changing the course of history. Not only had it caused the
+United States of America to enter the war but it also put cryptography in the forefront of political
+and military strategy. 
+
+The history of cryptography can be traced back to 4000 years ago in the Egyptian town of 
+\textit{Menat Khufu}. Hieroglyphics on the tomb of \textit{Khnumhotep II} were written with unusual 
+symbols such as to obfuscate the meaning \cite{history_of_cryptography}. 
+
+The word \textit{cryptography} derives from the Greek word \textbf{\textit{kryptos}}
+meaning hidden and \textbf{\textit{graphein}} meaning writing \cite{pawlan_cryptography}.
+Cryptography is the science of concealing information in such a way that the message
+may only be read by whom it is intended for \cite{cryptography_definition}. 
+Likewise, \textit{cryptanalysis} is the study of deciphering codes where the key is unknown 
+\cite{cryptanalysis_definition}.  
+
+A live chat application is a software which allows two or more users to communicate in real-time. 
+Over the internet, the messages that are sent will typically be relayed by many other hosts
+outside of the control of the sender or recipient. Because of this, it is possible for data
+being transmitted over the network to be compromised by a third-party. To combat this, we can employ
+the use of cryptography to encrypt messages before being sent and then decrypt them upon delivery. 
+This paper will examine different cryptography algorithms and how they work within a live chat 
+application.  
