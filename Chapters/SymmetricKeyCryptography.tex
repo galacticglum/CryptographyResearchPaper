@@ -14,3 +14,61 @@ First we will explore and implement the various classical cryptography examples 
 and discuss their implementation. 
 
 \section{Transposition Ciphers}
+
+One of the simplest methods of cryptography, a transposition cipher, works by changing the ordering of the message to make it seemingly unreadable.
+This is similar to an anagram but with a regular defined structure to make it easily decryptable assuming you know the defined structure or the \textit{key}).   
+
+Mathematically, the ciphertext will be a permutation of the original plaintext. We can use an encryption function to encrypt our plaintext and then use 
+the \textit{inverse} of our encryption function to decrypt our ciphertext. A generic transposition cipher (one with no specific encryption function) 
+can be expressed mathematically as follows: $$\mathlarger{P \rightarrow E, f(x)}$$
+
+In this example, we are mapping the set $P$ containing the plaintext to the set $E$ containing the ciphertext using the function $f(x)$. 
+In mathematics, this would be referred to a \textit{bijection} from set $P$ to $E$. Keep in mind that while transposition ciphers certainly
+are functions, we can not easily assign them a simple algebraic formula since they deal with the positions of letters rather than the letters themselves.
+
+Decryption of the ciphertext is defined in a similar fashion, but instead we use the \textit{inverse bijection} from our ciphertext set $E$ to $P$. 
+Note that now our function $f(x)$ is inversed becoming $f^{-1}(x)$ $$\mathlarger{E \rightarrow P, f^{-1}(x)}$$
+
+There are a few ways of implementing the transposition cipher, each with their own benefits and drawbacks. 
+
+Note: this section is incomplete, algorithm implementations will be added later.
+
+\section{Substitution Ciphers}
+
+The Caesar Cipher, arguably the most popular form of substitution ciphers is another very simple form of cryptography. 
+It works by replacing each letter by a certain number of letters up or down in the alphabet. 
+
+Here is a simple example of a message encrypted using Caesar cipher with a shift offset of 3:
+
+\begin{minted}[mathescape,
+               linenos,
+               numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{text}
+
+Plaintext message: 
+HELLO WORLD
+               
+Ciphertext message:
+KHOOR ZRUOG
+\end{minted}
+
+Even though the ciphertext appears to be unreadable, substitution cipher remains to be one of the weakest forms of cryptography. 
+This is for several reasons:
+\begin{itemize}  
+    \item The possible number of keys is very small, since the key is an offset by which to shift by, it is limited to the number of letters in the alphabet.
+    In the case of the English alphabet, one could very much easily try all 25 possibilities. 
+    \item Since the structure of the original message remains intact, the ciphertext could be subjected to frequency-analysis which would reveal patterns about the message;
+    potentially revealing the key.
+    \item By studying multiple different ciphertexts, one could notice patterns within them and find out the key through that.
+\end{itemize}
+
+The substitution cipher can be expressed mathematically as follows: $$\mathlarger{E_i(n)=(n+k)\mod{26}}$$
+
+Here we say that the encryption of the $ith$ letter $n$ is equal to a shift of $n+k$ where $k$ is the shift offset (or the key). The result of the shift
+is modulo divided by $26$ to make sure that if the shift goes beyond the range of the alphabet (0 to 26),  it wraps around back to the beginning.
+
+Decryption is done in a similar manner, but instead subtracting by $k$. $$\mathlarger{P_i(n)=(n-k)\mod{26}}$$
+
+Please note that even though this example is for the English alphabet, the aforementioned equations should work for most languages assuming that they are modified
+to the count of the specific languages alphabet.
