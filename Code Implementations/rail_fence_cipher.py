@@ -16,10 +16,10 @@ def encrypt(plain_text, rail_num):
     width = len(plain_text)
     rows = [''] * rail_num
 
-    def handle_row_iteration(y, i):
+    def iteration(y, i):
         rows[y] += plain_text[i]
 
-    handle_rail_iteration(handle_row_iteration, width, rail_num)
+    handle_rail_iteration(iteration, width, rail_num)
     return ''.join(rows)
      
 def decrypt(cipher_text, rail_num):
@@ -42,5 +42,6 @@ plain_text = input('What should I encrypt? ')
 
 result = encrypt(plain_text, key)
 chunk_size = 5
+
 print('\nEncrypted message: '+' '.join([result[i:i+chunk_size] for i in range(0, len(plain_text), chunk_size)]))
 print('Decrypted message: ' + decrypt(result, key))
