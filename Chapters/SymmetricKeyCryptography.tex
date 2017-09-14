@@ -30,9 +30,85 @@ Decryption of the ciphertext is defined in a similar fashion, but instead we use
 Notice that now our function $f(x)$ is inversed becoming: $f^{-1}(x)$. The algebraic expression for decryption is written as follows: 
 $$\mathlarger{E \rightarrow P, f^{-1}(x)}$$
 
-There are a few ways of implementing the transposition cipher, each with their own benefits and drawbacks. 
+There are many different types of transposition cipher. In this section we will discuss a few of the more popular ones, 
+each with their own benefits and drawbacks. 
 
-Note: this section is incomplete, algorithm implementations will be added later.
+\subsection{Rail Fence Cipher}
+
+The \textit{rail fence cipher} (also referred to as a \textit{ZigZag} cipher) is a form of transposition cipher which arranges letters from
+the plaintext in different "rails". It works by writing letters downwards and diagonally on following "rails" of an 
+\textit{imaginary fence} (hence where the name of this cipher comes from). When we reach the bottom rail, we begin writing 
+letters upwards. Likewise, when we reach the top rail, we begin writing letters downwards again until the whole plaintext is
+written on our rail fence. For instance, if our fence has \textit{3} rails and our plaintext is:
+'\textit{WE ARE DISCOVERED FLEE AT ONCE}', the ciphertext would look like so:
+
+\begin{listing}[H]
+    \begin{minted}[mathescape,
+        numbersep=5pt,
+        frame=lines,
+        framesep=2mm]{text}
+    
+W . . . E . . . C . . . R . . . L . . . T . . . E
+. E . R . D . S . O . E . E . F . E . A . O . C .
+. . A . . . I . . . V . . . D . . . E . . . N . .
+    
+    \end{minted}
+    \caption{Example of plaintext encrypted using the rail fence cipher. In this example, we have removed
+    all whitespaces in the plaintext.}
+\end{listing}
+
+This is then read off to get the ciphertext:
+
+\begin{minted}[mathescape,
+    numbersep=5pt,
+    frame=lines,
+    framesep=2mm]{text}
+    
+WECRL TEERD SOEEF EAOCA IVDEN
+\end{minted}
+
+Decryption is done in a similar fashion by laying out the ciphertext in appropriate rails. Let's take a look at how
+you go about decrypting the ciphertext above. First, we must know the height and \textit{cycle} of the ciphertext. The height
+is simply the amount of rails that was used to encrypt the plaintext. A cycle is the number of letters which run from the top 
+row to the bottom row and then up again, but stops before the top-most row (where a new cycle begins). The cycle can be 
+written mathematically as: $$\mathlarger{2R - 2}$$ 
+
+This simply says that each cycle is double our number of rails, minus 2. This is because, when we double our number of rails
+(for going up and down) we wil have a duplicate position at the bottom row, thus we subtract $1$. We then also 
+subtract $1$ since our cycle does not include the top-most row.
+
+Now that we have discussed the theory behind the Rail Fence cipher, let's go ahead and implement it.
+First we will write the encryption function. To encrypt plaintext we need two key pieces of information:
+our plaintext and the amount of rails to encrypt with. Here is our encryption function definition:
+
+\begin{minted}{python}
+# Encryption function which takes in the plain_text and rail number.
+def encrypt(plain_text, rails):
+    # Create our cipher_text string and initialize to empty
+    cipher_text = str()
+
+    # TODO: Encryption
+
+    return cipher_text
+\end{minted}
+
+Now that we have defined our encryption function, we can actually start encrypting things! As discussed previously,
+when encrypting, the message is laid out in rails according to the cycle. Therefore, we will need to calculate the cycle
+within our function, to do this we will use the \textit{railmax} variable. The railmax variable is the max rails we can cycle,
+we use the $\max$ function to make sure that railmax stays above $1$. 
+
+\begin{minted}{python}
+railmax = max((rails - 1) * 2, 1) # 1 is special case for 1 rail    
+\end{minted}
+
+Next we will write the letters of the plaintext to
+their corresponding position on the rail. To do this, we use a \textit{for loop} from 0 to \textit{rails}. 
+
+\begin{minted}{python}
+for rail in range(rails):
+    # TODO: Layout letters in their proper position
+    pass
+\end{minted}
 
 \section{Substitution Ciphers}
 
@@ -42,7 +118,6 @@ It works by replacing each letter by a certain number of letters up or down in t
 Here is a simple example of a message encrypted using Caesar cipher with a shift offset of 3:
 
 \begin{minted}[mathescape,
-               linenos,
                numbersep=5pt,
                frame=lines,
                framesep=2mm]{text}

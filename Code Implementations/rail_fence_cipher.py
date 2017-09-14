@@ -5,6 +5,7 @@ def encrypt(plain_text, rails):
     for rail in range(rails):
         railsymbol = rail
         increase = railskip - 2 * rail
+        
         if rail == rails - 1:
             increase = railskip
 
@@ -21,6 +22,7 @@ def decrypt(cipher_text, rails):
     plain_text = [''] * len(cipher_text)
     cipher_index = 0
     railskip = max((rails - 1) * 2, 1)  # 1 is special case for 1 rail
+
     for rail in range(rails):
         railsymbol = rail
         increase = railskip - 2 * rail
