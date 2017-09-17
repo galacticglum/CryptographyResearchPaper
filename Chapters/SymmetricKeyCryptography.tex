@@ -75,9 +75,29 @@ written mathematically as: $$\mathlarger{2R - 2}$$
 
 This simply says that each cycle is double our number of rails, minus 2. This is because, when we double our number of rails
 (for going up and down) we wil have a duplicate position at the bottom row, thus we subtract $1$. We then also 
-subtract $1$ since our cycle does not include the top-most row.
+subtract $1$ since our cycle does not include the top-most row. Do note that the rail index is \textit{zero based}. This means
+that the \textit{first} rail will have an index of \textit{0} and the last rail will have an index of $n - 1$.
 
-Now that we have discussed the theory behind the Rail Fence cipher, let's go ahead and implement it.
+Next, we will need to know the distance between every character on a specific rail. If we refer back to our example,
+you will notice that both the top and bottom rails have the \textit{same} spacing between each character. This is because,
+both the top and bottom row are where cycles connect. If you think of it as a triangle, the vertices of the triangle are
+layed out on the bottom and top rows. The equation for calculating the character distance is: $$\mathlarger{C - 2R}$$
+
+In simple terms, we are getting the \textit{distance} between our cycle and our current rail (factoring both up and
+ down movements). As previously mentioned, distance patterns alternate on middle rows, this alternation is our cycle
+  minus our \textit{current} character distance. This can be written mathematically as follows: $$\mathlarger{D_n = C - D_c}$$
+
+Where $C$ is our cycle, $D_c$ is our current character distance, and $D_n$ is our new character distance.
+
+There is one last step to calculating the character distance: handling the bottom rail. The aforementioned distance equation
+will \textit{not} work for the bottom rail. Instead, if the rail is the bottom rail then the character distance is the 
+cycle. In fact, the top rail is also the cycle but we don't need to manually handle that case as the equation does that for us
+(since the subtraction is factored out because the rail index is \textit{0}).
+
+Given the cycle and character distance, we can simply reconstruct the rail fence by laying out the cipher
+text according to the appropriate character distance. 
+
+Now that we have discussed the theory behind the Rail Fence cipher, we will go ahead and implement it.
 First we will write the encryption function. To encrypt plaintext we need two key pieces of information:
 our plaintext and the amount of rails to encrypt with. Here is our encryption function definition:
 
@@ -94,21 +114,40 @@ def encrypt(plain_text, rails):
 
 Now that we have defined our encryption function, we can actually start encrypting things! As discussed previously,
 when encrypting, the message is laid out in rails according to the cycle. Therefore, we will need to calculate the cycle
-within our function, to do this we will use the \textit{railmax} variable. The railmax variable is the max rails we can cycle,
-we use the $\max$ function to make sure that railmax stays above $1$. 
+within our function. We can use the aforementioned equation to calculate the cycle. We use the \textit{max} function to 
+make sure that our cycle stays above 1, it is simply a special case for an encryption with one rail.\footnote{Although 
+encrypting plaintext with one rail won't yield particularly interesting results, we still make sure our algorithm can 
+support it.}
 
 \begin{minted}{python}
-railmax = max((rails - 1) * 2, 1) # 1 is special case for 1 rail    
+cycle = max(rails * 2 - 2, 1) # 1 is special case for 1 rail    
 \end{minted}
 
-Next we will write the letters of the plaintext to
-their corresponding position on the rail. To do this, we use a \textit{for loop} from 0 to \textit{rails}. 
+Next we will write the letters of the plaintext to their corresponding position on the rail. 
+To do this, we will use a \textit{for loop} from 0 to \textit{rails} to iterate through every single rail.  
 
 \begin{minted}{python}
 for rail in range(rails):
     # TODO: Layout letters in their proper position
     pass
 \end{minted}
+
+Inside the loop, we must calculate a few key pieces of data. First, we will need to know the distance between 
+each character on the specific rail. As discussed, there is an alternating pattern between each character on a rail,
+one for a character going down a cycle, and one for a character going up a cycle, with the top and bottom rails
+having a constant spacing between characters. Since the top and bottom rails have the same spacing, if the rail
+is the bottom rail, we set our distance to the cycle. Second, we will need to have a pointer variable which
+keeps a reference to the current character we are looking at. This will simply be initialized to our rail (the start position
+of the rail in the text). The contents of the \textit{for} loop will look like this:
+
+\begin{minted}[frame=lines]{python}
+ptr = rail
+
+# Calculate the distance
+character_distance = cycle - 2 * rail
+if rail == rails - 1:
+    character_distance = cycle
+\end{minted} 
 
 \section{Substitution Ciphers}
 

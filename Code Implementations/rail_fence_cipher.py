@@ -1,20 +1,24 @@
 def encrypt(plain_text, rails):
     cipher_text = str()
-    railskip = max((rails - 1) * 2, 1) # 1 is special case for 1 rail
+    cycle = max((rails - 1) * 2, 1) # 1 is special case for 1 rail
     
     for rail in range(rails):
-        railsymbol = rail
-        increase = railskip - 2 * rail
+        ptr = rail
+        character_distance = cycle - 2 * rail
         
+        # Both the bottom and top rails have a (same) character distance of the cycle. 
         if rail == rails - 1:
-            increase = railskip
+            character_distance = cycle
 
-        while railsymbol < len(plain_text):
-            cipher_text += plain_text[railsymbol]
-            railsymbol += increase
+        # While we have *something* to write
+        while ptr < len(plain_text):
+            cipher_text += plain_text[ptr]
+            ptr += character_distance
 
+            # If this is not the top or bottom rail, alternate between two distance patterns (one for going up a cycle 
+            # and one for going down a cycle). 
             if rail != 0 and rail != rails - 1:
-                increase = railskip - increase
+                character_distance = cycle - character_distance
 
     return cipher_text
 
