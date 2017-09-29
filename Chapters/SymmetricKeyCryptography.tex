@@ -99,9 +99,12 @@ text according to the appropriate character distance.
 
 Now that we have discussed the theory behind the Rail Fence cipher, we will go ahead and implement it.
 First we will write the encryption function. To encrypt plaintext we need two key pieces of information:
-our plaintext and the amount of rails to encrypt with. Here is our encryption function definition:
+our plaintext and the amount of rails to encrypt with. 
 
-\begin{minted}[frame=lines]{python}
+\begin{minted}[mathescape,
+    numbersep=5pt,
+    frame=lines,
+    framesep=2mm]{python}
 # Encryption function which takes in the plain_text and rail number.
 def encrypt(plain_text, rails):
     # Create our cipher_text string and initialize to empty
@@ -112,47 +115,117 @@ def encrypt(plain_text, rails):
     return cipher_text
 \end{minted}
 
-Now that we have defined our encryption function, we can actually start encrypting things! As discussed previously,
-when encrypting, the message is laid out in rails according to the cycle. Therefore, we will need to calculate the cycle
-within our function. We can use the aforementioned equation to calculate the cycle. We use the \textit{max} function to 
+As discussed previously, when encrypting, the message is laid out in rails according to the cycle. 
+Therefore, we will need to calculate the cycle within our function. 
+We can use the aforementioned equation to calculate the cycle. We use the \textit{max} function to 
 make sure that our cycle stays above 1, it is simply a special case for an encryption with one rail.\footnote{Although 
-encrypting plaintext with one rail won't yield particularly interesting results, we still make sure our algorithm can 
-support it.}
+encrypting plaintext with one rail won't yield particularly interesting results, we still make sure our algorithm can support it.}
 
 \begin{minted}{python}
 cycle = max(rails * 2 - 2, 1) # 1 is special case for 1 rail    
 \end{minted}
 
 Next we will write the letters of the plaintext to their corresponding position on the rail. 
-To do this, we will use a \textit{for loop} from 0 to \textit{rails} to iterate through every single rail.  
+We will iterate through every rail and layout characters which belong to that rail. 
 
-\begin{minted}{python}
-for rail in range(rails):
-    # TODO: Layout letters in their proper position
-    pass
-\end{minted}
-
-Inside the loop, we must calculate a few key pieces of data. First, we will need to know the distance between 
+In every iteration, we must calculate a few key pieces of data. First, we will need to know the distance between 
 each character on the specific rail. As discussed, there is an alternating pattern between each character on a rail,
 one for a character going down a cycle, and one for a character going up a cycle, with the top and bottom rails
 having a constant spacing between characters. Since the top and bottom rails have the same spacing, if the rail
 is the bottom rail, we set our distance to the cycle. Second, we will need to have a pointer variable which
 keeps a reference to the current character we are looking at. This will simply be initialized to our rail (the start position
-of the rail in the text). The contents of the \textit{for} loop will look like this:
+of the rail in the text). 
 
-\begin{minted}[frame=lines]{python}
-ptr = rail
+Laying out the letters is actually quite simply. Since we know the distance between each character, we can continue
+iterating through the plaintext until our pointer is \textit{greater} than the length of our plaintext. In every iteration,
+we increment the pointer by our character distance, making sure to alternate between the two distance patterns. 
 
-# Calculate the distance
-character_distance = cycle - 2 * rail
-if rail == rails - 1:
-    character_distance = cycle
-\end{minted} 
+Here is the iteration code along with the rest of the encryption function.
+
+\begin{listing}[H]
+    \begin{minted}[mathescape,
+        numbersep=5pt,
+        frame=lines,
+        framesep=2mm]{python}
+def encrypt(plain_text, rails):
+    cipher_text = str()
+    cycle = max((rails - 1) * 2, 1) # 1 is special case for 1 rail
+            
+    for rail in range(rails):
+        ptr = rail
+        character_distance = cycle - 2 * rail
+                
+        # Both the bottom and top rails have a (same) character distance of the cycle. 
+        if rail == rails - 1:
+            character_distance = cycle
+        
+        # While we have *something* to write
+        while ptr < len(plain_text):
+            cipher_text += plain_text[ptr]
+            ptr += character_distance
+        
+            # If this is not the top or bottom rail 
+            # alternate between two distance patterns
+            if rail != 0 and rail != rails - 1:
+                character_distance = cycle - character_distance
+        
+    return cipher_text
+        \end{minted}
+        \caption{Full implementation of encryption in the rail fence cipher.}
+\end{listing}
+
+The implementation for decryption is almost identical. Like encryption, when decrypting we must layout our ciphertext in the corresponding
+rails. To do this, we can use the \textit{same} algorithm that we used for encryption. 
+
+\begin{listing}[H]
+    \begin{minted}[mathescape,
+        numbersep=5pt,
+        frame=lines,
+        framesep=2mm]{python}
+def decrypt(cipher_text, rails):
+    plain_text = [''] * len(cipher_text)
+    cipher_index = 0
+    cycle = max((rails - 1) * 2, 1)  # 1 is special case for 1 rail
+    
+    for rail in range(rails):
+        ptr = rail
+        character_distance = cycle - 2 * rail
+    
+        # Both the bottom and top rails have a (same) character distance of the cycle. 
+        if rail == rails - 1:
+            character_distance = cycle
+    
+        # While we have *something* to write
+        while ptr < len(plain_text):
+            plain_text[ptr] = cipher_text[cipher_index]
+            cipher_index += 1
+                
+            ptr += character_distance
+            
+            # If this is not the top or bottom rail
+            # alternate between two distance patterns  
+            if rail != 0 and rail != rails - 1:
+                character_distance = cycle - character_distance
+    
+    return ''.join(plain_text)
+        \end{minted}
+        \caption{Full implementation of decryption in the rail fence cipher.}
+\end{listing}
+
+As you can see, there are only slight differences between the encryption and decryption implementations. The first difference is the
+way we build our result text. When we \textit{encrypt}, we append characters to a string (which is our ciphertext). We can do this because
+our ciphertext is \textit{one-dimensional}. Conversely, when we decrypt, since we are laying out characters on rails, we must preserve the order of the
+fence; we can think of this as \textit{two-dimensional}. The second change, is that introduction of a second pointer variable: the \textit{cipher index}. 
+This is simply used to track the current read index of the ciphertext so we know what character to read next. There are some other \textit{small} changes in 
+the decryption code but those are self-explanatory so they will not be covered.
 
 \section{Substitution Ciphers}
 
 The Caesar Cipher, arguably the most popular form of substitution ciphers is another very simple form of cryptography. 
-It works by replacing each letter by a certain number of letters up or down in the alphabet. 
+It works by replacing each letter by a certain number of letters up or down in the alphabet. But now, instead of 
+creating our ciphertext, we read it into the plaintext.
+
+
 
 Here is a simple example of a message encrypted using Caesar cipher with a shift offset of 3:
 
