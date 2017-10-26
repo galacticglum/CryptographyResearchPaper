@@ -30,7 +30,7 @@ Decryption of the ciphertext is defined in a similar fashion, but instead we use
 Notice that now our function $f(x)$ is inversed becoming: $f^{-1}(x)$. The algebraic expression for decryption is written as follows: 
 $$\mathlarger{E \rightarrow P, f^{-1}(x)}$$
 
-Though There are many different types of transposition ciphers, in this section we will only discuss one and it's benefits, drawbacks, and efficiency.
+Though there are many different types of transposition ciphers, in this section we will only discuss one and it's benefits, drawbacks, and efficiency.
 
 \subsection{Rail Fence Cipher}
 
@@ -89,9 +89,9 @@ In simple terms, we are getting the \textit{distance} between our cycle and our 
 Where $C$ is our cycle, $D_c$ is our current character distance, and $D_n$ is our new character distance.
 
 There is one last step to calculating the character distance: handling the bottom rail. The aforementioned distance equation
-will \textit{not} work for the bottom rail. Instead, if the rail is the bottom rail then the character distance is the 
-cycle. In fact, the top rail is also the cycle but we don't need to manually handle that case as the equation does that for us
-(since the subtraction is factored out because the rail index is \textit{0}).
+will \textit{not} work for the bottom rail. Instead, the character distance for the bottom rail is our cycle. 
+In fact, the top rail is also the cycle but we don't need to manually handle that case as our equation does that for us 
+(the subtraction is factored when the rail index is \textit{0}).
 
 Given the cycle and character distance, we can simply reconstruct the rail fence by laying out the cipher
 text according to the appropriate character distance. 
@@ -129,8 +129,8 @@ We will iterate through every rail and layout characters which belong to that ra
 
 In every iteration, we must calculate a few key pieces of data. First, we will need to know the distance between 
 each character on the specific rail. As discussed, there is an alternating pattern between each character on a rail,
-one for a character going down a cycle, and one for a character going up a cycle, with the top and bottom rails
-having a constant spacing between characters. Since the top and bottom rails have the same spacing, if the rail
+one for a character going down a cycle, and one for a character going up a cycle (with the top and bottom rails
+having a constant spacing between characters). Since the top and bottom rails have the same spacing, if the rail
 is the bottom rail, we set our distance to the cycle. Second, we will need to have a pointer variable which
 keeps a reference to the current character we are looking at. This will simply be initialized to our rail (the start position
 of the rail in the text). 
@@ -214,19 +214,19 @@ def decrypt(cipher_text, rails):
 As you can see, there are only slight differences between the encryption and decryption implementations. The first difference is the
 way we build our result text. When we \textit{encrypt}, we append characters to a string (which is our ciphertext). We can do this because
 our ciphertext is \textit{one-dimensional}. Conversely, when we decrypt, since we are laying out characters on rails, we must preserve the order of the
-fence; we can think of this as \textit{two-dimensional}. The second change, is that introduction of a second pointer variable: the \textit{cipher index}. 
-This is simply used to track the current read index of the ciphertext so we know what character to read next. There are some other \textit{small} changes in 
-the decryption code but those are self-explanatory so they will not be covered.
+fence; we can think of this as \textit{two-dimensional} (since we are not just laying out character horizontally). 
+The second change, is that introduction of a second pointer variable: the \textit{cipher index}. 
+This is simply used to track the current reading-index of the ciphertext (so we know what character to read next). 
+There are some other \textit{small} changes in the decryption code but those are self-explanatory so they will not be covered.
 
 \section{Substitution Ciphers}
 
 The Caesar Cipher, arguably the most popular form of substitution ciphers is another very simple form of cryptography. 
-It works by replacing each letter by a certain number of letters up or down in the alphabet. But now, instead of 
-creating our ciphertext, we read it into the plaintext.
+It works by replacing each letter by a certain number of letters up or down in the alphabet. The amount of 
+letters that we move by is known as the \textit{shift offset}. If you shift the letter \textit{A} by 3 spaces, you get 
+the letter \textit{D}. If you shift the letter \textit{B}, you get the letter \textit{E}.
 
-
-
-Here is a simple example of a message encrypted using Caesar cipher with a shift offset of 3:
+Here is a simple example of a message encrypted using the cipher with a shift offset of 3:
 
 \begin{minted}[mathescape,
                numbersep=5pt,
@@ -253,9 +253,209 @@ This is for several reasons:
 The substitution cipher can be expressed mathematically as follows: $$\mathlarger{E_i(n)=(n+k)\mod{26}}$$
 
 Here we say that the encryption of the $ith$ letter $n$ is equal to a shift of $n+k$ where $k$ is the shift offset (or the key). The result of the shift
-is modulo divided by $26$ to make sure that if the shift goes beyond the range of the alphabet (0 to 26),  it wraps around back to the beginning.
+is divided by $26$ where the remainder of the division is used to make sure that the shift wraps around the alphabet; if the 
+shift goes beyond the range of the alphabet ($0$ to $26$), it wraps around back to the beginning.
 
 Decryption is done in a similar manner, but instead subtracting by $k$. $$\mathlarger{P_i(n)=(n-k)\mod{26}}$$
 
 Please note that even though this example is for the English alphabet, the aforementioned equations should work for most languages assuming that they are modified
 to the count of the specific languages' alphabet.
+
+The concept of shifting letters is rather intuitive but how do we shift letters in code? This is done by representing
+each letter as a \textit{number} and then \textit{adding} or \textit{subtracting} from this number by our shift
+offset. The \textit{ASCII} (American Standard Code for Information Interchange) scheme is an encoding which 
+provides the numerical representation of letters; this is known as an \textit{ordinal}. 
+We can use ASCII to implement this cipher. 
+
+In the ASCII encoding scheme, the capital letters: \textit{A} through \textit{Z} are represented by the ordinals $65$ through 
+$90$. The lowercase letters: \textit{a} through \textit{z} are represented by the ordinals $97$ through $122$. 
+Lastly, the numeric digits $0$ through $9$ are represented by the ordinals $48$ through $57$.
+
+Modern computers typically use the \textit{UTF-8} encoding instead of ASCII. Fortunately, UTF-8 is backwards compatible
+with ASCII which means that the ordinals in UTF-8 will be the same as in ASCII.
+
+The figure below shows the relevant parts of the ASCII table in all of it's glory!
+
+\begin{center}
+    \begin{tabular}{ | c c | c c | c c | c c | c c | c c |  } 
+     \hline
+     \multicolumn{12}{|c|}{ASCII Table} \\
+     \hline
+    % x & n     & x  & n & x  & n & x  & n & x  & n  & x   & n
+     32 & (space) & 48 & 0 & 64 & @ & 80 & P & 96 & ` & 112 & p \\ 
+     33 & !     & 49 & 1 & 65 & A & 81  & Q & 97  & a  & 113 & q \\
+     34 & "  & 50 & 2 & 66 & B & 82 & R & 98 & b & 114 & r \\
+     35 & \# & 51 & 3 & 67 & C & 83 & S & 99 & c & 115 & s \\
+     36 & \$ & 52 & 4 & 68 & D & 84 & T & 100 & d & 116 & t \\
+     37 & \% & 53 & 5 & 69 & E & 85 & U & 101 & e & 117 & u \\
+     38 & \& & 54 & 6 & 70 & F & 86 & V & 102 & f & 118 & v \\
+     39 & '  & 55 & 7 & 71 & G & 87 & W & 103 & g & 119 & w \\
+     40 & (  & 56 & 8 & 72 & H & 88 & X & 104 & h & 120 & x \\
+     41 & )  & 57 & 9 & 73 & I & 89 & Y & 105 & i & 121 & y \\
+     42 & *  & 58 & : & 74 & J & 90 & Z & 106 & j & 122 & z \\
+     43 & +  & 59 & ; & 75 & K & 91 & [ & 107 & k & 123 & \{ \\ 
+     44 & ,  & 60 & < & 76 & L & 92 & \textbackslash & 108 & l & 124 & $\vert$ \\
+     45 & -  & 61 & = & 77 & M & 93 & ] & 109 & m & 125 & \} \\
+     46 & .  & 62 & > & 78 & N & 84 & \textasciicircum & 110 & n & 126 & \textasciitilde \\
+     47 & /  & 63 & ? & 79 & O & 85 & \textunderscore & 111 & o & 127 & (delete) \\
+     \hline
+    \end{tabular}
+    \end{center}
+
+Assume you wanted to shift the letter \textit{"A"} by three spaces, you would do the following:
+\begin{itemize}
+    \item Convert "A" to it's respective ASCII ordinal: 65.
+    \item Add 3 to 65, to get the ordinal: 68.
+    \item Convert the new ordinal: 68, back to it's letter form to get \textit{"D"}.
+\end{itemize} 
+
+In Python, the \texttt{chr()} and \texttt{ord()} allows us to convert from letters and ordinals, respectively. 
+The \texttt{chr()} function takes an integer as a parameter and returns the respective ASCII character. Conversely, 
+the \texttt{ord()} function takes a character as a parameter and returns the respective ASCII ordinal. 
+
+The code below represents an implementation of the Caesar cipher:
+
+\begin{listing}[H]
+    \begin{minted}[mathescape,
+        numbersep=5pt,
+        frame=lines,
+        framesep=2mm]{python}
+    def cipher(message, shift):
+        result = str()
+        for character in message:
+            new_ordinal = ord(character) + shift
+            result += chr(new_ordinal)
+        
+        print(f"Your translated text is {result}")
+    
+    # 1 is encrypt, 2 is decrypt
+    mode = int(input("Should I encrypt (1) or decrypt (2)? "))
+    
+    # Make sure that our shift offset is within range.
+    shift = int(input("What is the shift offset? ")) % 26
+    message = input("What is the message? ")
+    
+    if mode == 1:
+        cipher(message, shift)
+    elif mode == 2:
+        # We multiply shift by -1 since we want to subtract the shift.
+        cipher(message, -shift)
+    else:
+        print("Invalid mode input. Try again.")    
+        \end{minted}
+        \caption{Full implementation of Caesar cipher in Python.}
+\end{listing}
+
+The code for Caesar cipher is rather simple. The actual cipher process rests within the \texttt{cipher()} function.
+Encryption and decryption processes are the reverse of each other - yet even then, they share code which is quite alike.
+The only difference between the two is the \textit{direction} in which the shift in. Since the direction is a binary decision, 
+represented by a subtraction or addition, we can simply combine both processes into a generic function. In order to encrypt
+using the \texttt{cipher()} function, we pass in the shift as a \textit{positive} value; when we decrypt, we pass in the shift
+value as a \textit{negative}. More specifically, the encryption and decryption functions are defined as follows:
+
+\begin{minted}[mathescape,
+    numbersep=5pt,
+    frame=lines,
+    framesep=2mm]{python}
+    def encrypt(message, shift):
+        return cipher(message, shift)
+
+    def decrypt(message, shift):
+        return cipher(message, -shift)
+\end{minted}
+
+The above code illustrates the similarity between the two processes. As you can see, whether we decrypt or encrypt is 
+determined by the sign of the shift offset.
+
+\subsection{Breaking the Caesar Cipher}
+
+The simplicity of Caesar cipher is unparalleled in other ciphers - we can see this in the implementation of the cipher.
+For instance, the transposition cipher (mentioned earlier in this chapter), though simple, required changes in encryption and
+decryption processes. Though simplicity does come with a cost, as discussed earlier, Caesar cipher is rather insecure. 
+We can easily try all 26 different keys to figure out the cipher text - this is known as a \textit{brute force} method
+of breaking a cipher. The following code shows how we can break a Caesar cipher through brute force. 
+
+\begin{listing}[H]
+    \begin{minted}[mathescape,
+        numbersep=5pt,
+        frame=lines,
+        framesep=2mm]{python}
+    def cipher(message, shift):
+        result = str()
+        for character in message:
+            new_ordinal = ord(character) + shift
+            result += chr(new_ordinal)
+        
+        print(f"Your translated text is {result}")
+    
+    def solve(message, max_key):
+        # Start at the shift offset of 1
+        for i in range(1, max_key):
+            cipher(message, -i)
+    
+    message = input("What do you want to solve? ")
+    max_key = int(input("What is the max key? "))
+    solve(message, max_key)  
+        \end{minted}
+        \caption{Implementation of a Caesar cipher solver in Python.}
+\end{listing}
+
+The solver code is rather simple, we run the \texttt{cipher()} on every possible shift offset from \textit{1} to
+to the \textit{max key size}. Recall that the message \textit{"Hello"} is \textit{"Khoor"} when encrypting with a 
+shift offset of \textit{3}. Let's take a look at a sample run of the solver on the encrypted message: \textit{"Khoor"}.
+
+\newcommand{\reducedstrut}{\vrule width 0pt height .9\ht\strutbox depth .9\dp\strutbox\relax}
+\newcommand{\yellow}[1]{%
+  \begingroup
+  \setlength{\fboxsep}{0pt}%  
+  \colorbox{yellow}{\reducedstrut#1\/}%
+  \endgroup
+}
+
+\begin{minted}[
+        escapeinside=||,
+        mathescape=true,
+        numbersep=5pt,
+        frame=lines,
+        framesep=2mm]{text}
+    What do you want to solve? Khoor
+    What is the max key? 26
+    Your translated text is Jgnnq
+    Your translated text is Ifmmp
+    |$\yellow{\texttt{Your translated text is Hello}}$|
+    Your translated text is Gdkkn
+    Your translated text is Fcjjm
+    Your translated text is Ebiil
+    Your translated text is Dahhk
+    Your translated text is C`ggj
+    Your translated text is B_ffi
+    Your translated text is A^eeh
+    Your translated text is @]ddg
+    Your translated text is ?\ccf
+    Your translated text is >[bbe
+    Your translated text is =Zaad
+    Your translated text is <Y``c
+    Your translated text is ;X__b
+    Your translated text is :W^^a
+    Your translated text is 9V]]`
+    Your translated text is 8U\\_
+    Your translated text is 7T[[^
+    Your translated text is 6SZZ]
+    Your translated text is 5RYY\
+    Your translated text is 4QXX[
+    Your translated text is 3PWWZ
+    Your translated text is 2OVVY
+\end{minted}
+\begingroup
+    \captionof{listing}{Sample run of a Caesar cipher solver in Python.} 
+\endgroup
+
+The highlighted text above shows the decrypted message: "Hello". As you can see, we were able to decrypt our ciphertext
+using the brute force method rather simply. 
+
+Even though Caesar cipher is rather basic and can be easily broken, it is not invaluable. Undoubtedly, Caesar cipher gives
+off the impression of an encrypted message - and to the laymen, \textit{it is}. For simple cases, Caesar cipher does indeed
+obscure the meaning of messages. In brief, since Caesar cipher is simple to implement and is rather efficient in the
+encryption and decryption processes, it is certainly not a candidate which should be ruled out; rather, build on the 
+concepts established by the Caesar cipher in order to create a better cipher.
+
