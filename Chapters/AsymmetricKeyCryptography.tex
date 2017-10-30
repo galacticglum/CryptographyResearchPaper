@@ -1,0 +1,67 @@
+\chapter{Asymmetric-key cryptography}
+\label{Asymmetric-key cryptography} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+\textit{Asymmetric-key} cryptography (also commonly referred to as \textit{public-key} cryptography) is a system of cryptography which uses \textit{pairs} of keys to 
+encrypt and decrypt data. The pairs of keys consist of public keys which can be distributed, and private keys which are only known to the owner. Essentially,
+asymmetric-key cryptography allows us encrypt and decrypt data where the key for encryption is different than the key for decryption. Knowledge of either
+of these keys does not allow us to find the other one \cite{classical_algebra}. The name comes from that fact that we use multiple keys in the process of encryption and decryption
+and therefore have \textit{asymmetric} keys.
+
+Suppose, John and Mary want to securely communicate using the scheme above. First, John would produce a encryption key $K_1$ and a decryption key $K_2$. John 
+would then send Mary the encryption key $K_1$. Mary can now encrypt data using the key $K_1$ and send the result to John who can decrypt her data using his decryption key
+$K_2$. Let's now introduce Bob, who intercepts the transmission of the encryption key $K_1$. Bob can now encrypt messages using the key $K_1$ but is unable to decrypt 
+them --- only John can decrypt messages as he is the only one who posses the decryption key $K_2$. If John also wants to send messages to Mary, Mary will have to create
+an encryption key $x$ and a decryption key $y$ and then send the encryption key $x$ to John. Now, John can encrypt his messages using the encryption key $x$ (sent by Mary)
+and then send the encrypted data to Mary where she will decrypt the message using the decryption key $y$. As you can see, in this scheme, we don't care if a third-party 
+(such as Bob) gets a hold of one of the encryption keys --- hence they could just be \textit{public knowledge} \cite{classical_algebra}. 
+
+\section{The Rivest---Shamir---Adleman Scheme}
+
+The \textit{Rivest---Shamir---Adleman} scheme (or \textit{RSA} for short) is one of the first practical asymmetric-key cryptosystems \cite{classical_algebra}. 
+The cryptosystem is named after it's discoverers \textit{Ron Rivest}, \textit{Adi Shamir}, and \textit{Len Adleman}, who gave a definition on how 
+asymmetric-key cryptography could be realized \cite{classical_algebra}.
+
+The RSA scheme involves four distinct steps: \textit{key generation}, \textit{key distribution}, \textit{encryption}, and \textit{decryption}
+
+\subsection{Key Generation}
+
+A user who wishes to participate in a session of the scheme must first generate two keys: one public key for encryption and one private key for decryption. To do so,
+the user will first select two large prime numbers $p$ and $q$, and then multiply them together to calculate the integer $n = pq$. 
+If $$\mathlarger{\phi(n) = (p-1)(q-1)}$$ then the user will also select an integer $e > 1$ such that $GCD(e,\phi(n))=1$. 
+The integer $e$ will be used for the calculation of the encryption key. The user now solves for the equation: $$\mathlarger{ed \equiv 1 \pmod{\phi(n)}}$$
+
+According to the \textit{Linear Congurnece Theorem}, since $GCD(e,\phi(n))=1$, there is exactly one congruence class modulo $\phi(n)$ which satisfies the aforementioned
+congruence -- or in other words, there is only one integer between $0$ and $\phi(n)$ which satisfies the congruence, let $d$ represent this integer 
+\cite{classical_algebra}. Now, the pair of integers $(e,n)$ represent the user's public keys, and the pair of integers $(d,n)$ represent the user's private keys. 
+In other words, we now have the following keys:
+
+\begin{itemize}
+    \item $n$ --- the shared key.
+    \item $e$ --- the public encryption key.
+    \item $d$ --- the private decryption key.
+\end{itemize}
+
+\subsection{Key Distribution}
+
+Suppose that John and Mary are communication using the RSA scheme. John must know Mary's public key $e$ to encrypt his message and Mary must use her private key $d$ to 
+decrypt his message. Therefore, Mary must transmit her $(e,n)$ key pair to John via a reliable (though not secret) route. 
+
+\subsection{Encryption and Decryption}
+
+To encrypt the message $M$ --- first, the sender of the message would lookup the recipient's public key pair $(e,n)$ \cite{classical_algebra}. 
+Then the sender would compute the cipertext $C$ using the following equation: 
+$$\mathlarger{M^e \equiv C \pmod{n} \text{\hspace{1em}where\;\;}0 \leq C < n}$$
+
+The sender will then take the ciphertext $C$ and send it to the recipient.
+
+Decryption is the inverse of the encryption processes. The recipient of the message, will decrypt the message using the same equation for encryption but rather using it's
+own private decryption key pair $(d,n)$ \cite{classical_algebra}. Decryption can be expressed as 
+$$\mathlarger{C^d \equiv R \pmod{n} \text{\hspace{1em}where\;\;}0 \leq R < n}$$
+
+The decrypted message $R$ is the same as the original message $M$.
+
+It is very important to note that our message $M$ must be smaller than our $n$. In the case that $M$ is greater than $n$, we must split $M$ into blocks which are smaller
+than $n$. For example, if $n=12319$ and we want to encrypt the message $06212626$, we would split the message into two blocks --- $0621$ and $2626$, encrypt each block, 
+and then finally combine the blocks into one blocks (making sure to maintain the order of the blocks).
