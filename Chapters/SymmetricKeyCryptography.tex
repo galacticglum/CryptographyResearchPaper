@@ -1,8 +1,6 @@
 \chapter{Symmetric-key Cryptography} % Main chapter title
 \label{Symmetric-key Cryptography} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
-%----------------------------------------------------------------------------------------
-
 \textit{Symmetric-key} cryptography (also commonly referred to as \textit{private-key cryptography}) is a system of cryptography which
 uses the same keys for both encryption of plaintext and decryption of ciphertext. The keys must be shared between the different
 parties accessing and handling the information. The requirement that all (authorized) parties must have access to the secret key
@@ -252,7 +250,7 @@ There are some other \textit{small} changes in the decryption code but those are
 A substitution cipher is a type of cryptography technique where each unit of plaintext is replaced with a unit of ciphertext; a unit may refer to a single
 letter of the plaintext, a pair of letters, alternating patterns of the aforementioned, and so on \cite{wiki:substitution_cipher}.
 
-A substitution cipher can be compared with a transposition cipher --- the two are rather similar. In a transposition cipher, the units of plaintext are rearranged as a
+A substitution cipher can be compared with a transposition cipher---the two are rather similar. In a transposition cipher, the units of plaintext are rearranged as a
 permutation, but the units \textit{always} remained unchanged. The latter is unlike a substitution cipher which preserves the order of the plaintext but alters
 the units.
 
@@ -427,7 +425,7 @@ else:
 \end{listing}
 
 The code for Caesar cipher is rather simple. The actual cipher process rests within the \texttt{cipher()} function.
-Encryption and decryption processes are the reverse of each other --- yet even then, they share code which is quite alike.
+Encryption and decryption processes are the reverse of each other---yet even then, they share code which is quite alike.
 The only difference between the two is the \textit{direction} in which they shift in. Since the direction is a binary decision, 
 represented by a subtraction or addition, we can simply combine both processes into a generic function. In order to encrypt
 using the \texttt{cipher()} function, we pass in the shift as a \textit{positive} value; when we decrypt, we pass in the shift
@@ -451,7 +449,7 @@ determined by the sign of the shift offset.
 
 \subsection{Breaking the Caesar Cipher}
 
-The simplicity of Caesar cipher is unparalleled to other ciphers --- we can see this in the implementation of the cipher.
+The simplicity of Caesar cipher is unparalleled to other ciphers---we can see this in the implementation of the cipher.
 For instance, the transposition cipher (mentioned earlier in this chapter), though simple, required changes in encryption and
 decryption processes. Nevertheless, simplicity does come with a cost, as discussed earlier, Caesar cipher is rather insecure. 
 We can easily try all 26 different keys to figure out the cipher text; this is known as a \textit{brute force} method
@@ -536,14 +534,14 @@ The highlighted text above shows the decrypted message: "Hello." As you can see,
 using the brute force method rather simply. 
 
 Even though Caesar cipher is rather basic and can be easily broken, it is not invaluable. Undoubtedly, Caesar cipher gives
-off the impression of an encrypted message --- and to the laymen, \textit{it is}. For simple usage, Caesar cipher does indeed
+off the impression of an encrypted message---and to the laymen, \textit{it is}. For simple usage, Caesar cipher does indeed
 obscure the meaning of messages. In brief, since Caesar cipher is simple to implement and is rather efficient in the
 encryption and decryption processes, it is certainly not a candidate which should be ruled out; rather, build on the 
 concepts established by the Caesar cipher in order to create a better cipher.
 
 \section{Block Ciphers}
 
-A block cipher is a type of cryptography algorithm which operates on \textit{fixed-length} groups, comprised of bits --- called a \textit{block} \cite{wiki:block_cipher}.
+A block cipher is a type of cryptography algorithm which operates on \textit{fixed-length} groups, comprised of bits---called a \textit{block} \cite{wiki:block_cipher}.
 Block ciphers play an integral role in modern-day cryptography design; many cryptography methods are based off the design of the block cipher \cite{wiki:block_cipher}.
 
 Essentially, a block cipher takes a block of plaintext and produces a block of ciphertext, and vice-versa for decryption. 
@@ -590,7 +588,7 @@ In a Feistel cipher, a block is split into two equal-sized halves. The round fun
 The resulting halves are then swapped with each other \cite{wiki:feistel_cipher}.
 
 The basic encryption process for a Feistel cipher where $F(K, R)$ represents the round function and $K_0,K_1,\ldots,K_n$ represents the subkeys for the rounds 
-$0,1,\ldots,n$ respectively --- are as follows:
+$0,1,\ldots,n$ respectively---are as follows:
 
 \begin{enumerate}
     \item Split the plaintext into two equal halves, $L_0$ and $R_0$, respectively.
@@ -731,7 +729,7 @@ The Data Encryption Standard is now generally regarded to as insecure (for many 
 56 bits. Despite this, DES was "highly influential in the advancements of modern cryptography." \cite{wiki:des} 
 
 DES is structured much like any other iterated block cipher. In the cipher, a block consists of 64-bits \cite{wiki:des}. Also, DES uses a key to modify the 
-transformational operations --- a key is effectively only 56-bits as the algorithm uses 8-bits for error checking (and thus disregarding them in the actual operations) 
+transformational operations---a key is effectively only 56-bits as the algorithm uses 8-bits for error checking (and thus disregarding them in the actual operations) 
 \cite{wiki:des}.
 
 DES additionally makes use of \textit{initial} and \textit{final} permutations. Before transforming a block, an initial permutation table is applied to the 64-bit block of data.
@@ -893,7 +891,7 @@ The round $F(K, R)$ function is defined as follows:
     \item The 32-bit half-block is expanded to 48-bits using the \textit{expansion permutation table} (E). The expansion permutation duplicates half of the bits in the 
           32-bit block in order to expand the data. 
     \item The result of the expansion is then combined with the given subkey for the round (using a XOR operation).
-    \item The result of the key combination is split into eight 6-bit blocks of data which is then processed by the \textit{substitution boxes} --- one 6-bit block for 
+    \item The result of the key combination is split into eight 6-bit blocks of data which is then processed by the \textit{substitution boxes}---one 6-bit block for 
     each substitution-box. Each substitution-box replaces the 6-bit input data with a 4-bit output. The substitution values are non-linearly transformed.
     \item Lastly, the outputs from the substitution process are combined into one 32-bit block of data which is rearranged by a fixed permutation table known as the
         \textit{permutation-box}. The permutation-box shuffles the output of each substitution to increase cryptographic security.

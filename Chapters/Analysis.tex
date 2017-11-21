@@ -1,4 +1,36 @@
 \chapter{Analysis}
 \label{Analysis}
 
-TODO
+Like any algorithm, we can not define "the best cryptography method;" rather, the cryptography algorithm that you use is 
+very case-dependant. In order to find a suitable candidate(s), one must examine the merits of a set of different algorithms.
+
+When it comes to cryptography, security is at the root of the question. But how much do you \textit{really} value security?
+For some, it may be a matter of "life or death." For others, security is a secondary feature of their program. Maybe you don't
+even care about security? This can surely be the case, consider a puzzle game, one could employ the use of a substitution or 
+transposition cipher to create an interesting cryptography puzzle.
+
+Let us consider a \textit{live chat application}. This application will send messages from one user to another (over the network).
+We will assume that the messages sent are sensitive. In this case, security does seem to play a vital role in the function
+of the application. Though we must also consider the \textit{comprising party}---the party which intends to infiltrate the 
+communication network. 
+
+Say we are designing a chat application for an intranet,\footnote{An intranet is a private network that is only accessible to
+members of the network. An organization may use an intranet; only staff of the organization may access the network.} there may 
+no comprising party or the risk of a comprising party is low. Therefore we may not require any complex cryptography systems, 
+instead opting for a simple symmetric-key algorithm (such as Caesar Cipher or the slightly more complex DES scheme). On the 
+other hand, if we are developing a chat application for the internet where anyone can access the communication network. We may
+place more importance on security as the network is public.
+
+What if do we require a complex asymmetric-key system? We could use the discussed RSA scheme. All around, the RSA
+scheme is an excellent cryptography method---it is extremely reliable---it is purely a mathematical solution---and it is secure. 
+But as always, there exists a caveat. The RSA scheme generates insanely large numbers. This is due to the fact that our plaintext
+must be smaller than our modulus (the shared key). As discussed in 
+\hyperref[Asymmetric-key cryptography]{Asymmetric-key cryptography}, if our plaintext is
+larger than our modulus, we must split our plaintext into appropriately sized blocks. We then encrypt each block in some mode
+of operation (such as Feistel cipher). Unfortunately, this type of encryption will reveal redundancies in the ciphertext which
+makes the cipher easier to break. Alternatively, we can expand the size of our modulus (and private and public keys)
+to suit the size of our plaintext. This technique will work in theory but in practice there exists a hardware limitation---the
+size of a data type; RSA will quickly exceed the max value of a $64$-bit integer. Instead we can use a \textit{Big Integer}, a
+data structure which allows us to store \textit{very very} large numbers. This does however use a lot of memory. Nonetheless,
+despite the existing alternatives, there exists the fact that RSA is a memory-hog. And despite advancements in computer 
+technology, there always exists an instantial upper-bound---whether it be storage or speed.
