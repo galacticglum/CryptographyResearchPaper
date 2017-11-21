@@ -64,4 +64,4 @@ The decrypted message $R$ is the same as the original message $M$.
 
 It is very important to note that our message $M$ must be smaller than our $n$. In the case that $M$ is greater than $n$, we must split $M$ into blocks which are smaller
 than $n$. For example, if $n=12319$ and we want to encrypt the message $06212626$, we would split the message into two blocks --- $0621$ and $2626$, encrypt each block, 
-and then finally combine the blocks into one blocks (making sure to maintain the order of the blocks).
+and then finally combine the blocks into one block (making sure to maintain the order of the blocks when combining).
